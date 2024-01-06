@@ -8,7 +8,9 @@ WIDTH = 600
 
 # Get user input for the number of queens
 ROW = ''
-
+message = ''
+input_msg = 'Enter Number of Queens:'
+cont_msg = ''
 
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption('N-Queen Visualizer')
@@ -16,7 +18,11 @@ pygame.display.set_caption('N-Queen Visualizer')
 clock = pygame.time.Clock()
 base_font = pygame.font.Font(None,32)
 
+display_rect = pygame.Rect(100,100,140,32)
 input_rect = pygame.Rect(140,150,140,32)
+error_rect = pygame.Rect(100,200,140,32)
+cont_rect = pygame.Rect(100,300,140,32)
+
 color_active = pygame.Color('lightskyblue3')
 color_passive = pygame.Color('gray15')
 
@@ -284,13 +290,41 @@ while True:
         if event.type == pygame.KEYDOWN:
             if active == True:
                 if event.key == pygame.K_BACKSPACE:
+                    message = ''
                     ROW = ROW[:-1]
-                if event.key == pygame.K_RETURN:
-                    main(WIN, WIDTH)
-                    pygame.quit()
-                    sys.exit()
-                else:
+                    if ROW == '':
+                        cont_msg = ''
+                    elif int(ROW) <= 100 and int(ROW) >= 4:
+                        cont_msg = 'Press Enter To Continue'
+                    elif int(ROW) > 100:
+                        message = 'For Better Experience Make Input <= 100'
+                        cont_msg = ''
+                    elif int(ROW) < 4:
+                        message = 'Input Should be >= 4'
+                        cont_msg = ''
+                elif event.key == pygame.K_RETURN:
+                    if ROW == '':
+                        message = 'Input Can Not Be Empty'
+                    elif cont_msg == 'Press Enter To Continue':
+                        main(WIN, WIDTH)
+                        pygame.quit()
+                        sys.exit()
+                elif event.key == pygame.K_0 or event.key == pygame.K_1 or event.key == pygame.K_2 or event.key == pygame.K_3 or event.key == pygame.K_4 or event.key == pygame.K_5 or event.key == pygame.K_6 or event.key == pygame.K_7 or event.key == pygame.K_8 or event.key == pygame.K_9:
+                    message = ''
                     ROW += event.unicode
+                    if int(ROW) > 100:
+                        message = 'For Better Experience Make Input <= 100'
+                        cont_msg = ''
+                    elif int(ROW) < 4:
+                        message = 'Input Should be >= 4'
+                        cont_msg = ''
+                    else:
+                        message = ''
+                        cont_msg = 'Press Enter To Continue'
+                else:
+                    message = 'Please Enter Any Valid Number'
+                    if ROW == '':
+                        cont_msg = ''
 
     WIN.fill((0,0,0))
 
@@ -300,9 +334,21 @@ while True:
     else: 
         color = color_passive
     pygame.draw.rect(WIN,color,input_rect,2)
+    # pygame.draw.rect(WIN,color,error_rect,2)
 
+
+    disp_surface = base_font.render(input_msg,True,(255,255,255))
     text_surface = base_font.render(ROW,True,(255,255,255))
+    msg_surface = base_font.render(message,True,(255,255,255))
+    cont_surface = base_font.render(cont_msg,True,(0,255,0))
+
+
+
+    WIN.blit(disp_surface,(display_rect.x + 5, display_rect.y + 5))
     WIN.blit(text_surface,(input_rect.x + 5, input_rect.y + 5))
+    WIN.blit(msg_surface,(error_rect.x + 5, error_rect.y + 5))
+    WIN.blit(cont_surface,(cont_rect.x + 5, cont_rect.y + 5))
+
 
     input_rect.w = max(140, text_surface.get_width() + 10)
 
