@@ -1,5 +1,8 @@
 import pygame
 import sys
+import pygame_widgets
+from pygame_widgets.slider import Slider
+from pygame_widgets.textbox import TextBox
 
 pygame.init()
 
@@ -11,16 +14,23 @@ ROW = ''
 message = ''
 input_msg = 'Enter Number of Queens:'
 cont_msg = ''
+speed = None
 
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption('N-Queen Visualizer')
+
+
+slider = Slider(WIN, 100, 220, 300, 40, min=0, max=100, step=1)
+output = TextBox(WIN, 450, 215, 70, 50, fontSize=30)
+
+output.disable()
 
 clock = pygame.time.Clock()
 base_font = pygame.font.Font(None,32)
 
 display_rect = pygame.Rect(100,100,140,32)
 input_rect = pygame.Rect(140,150,140,32)
-error_rect = pygame.Rect(100,200,140,32)
+error_rect = pygame.Rect(100,300,140,32)
 cont_rect = pygame.Rect(100,300,140,32)
 
 color_active = pygame.Color('lightskyblue3')
@@ -250,7 +260,7 @@ def draw(win, grid, rows, width):
             spot.draw(win)
     draw_grid(win, rows, width)
     pygame.display.flip()
-    pygame.time.wait(100)
+    pygame.time.wait(speed)
 
 
 def main(win, width):
@@ -348,6 +358,10 @@ while True:
     WIN.blit(text_surface,(input_rect.x + 5, input_rect.y + 5))
     WIN.blit(msg_surface,(error_rect.x + 5, error_rect.y + 5))
     WIN.blit(cont_surface,(cont_rect.x + 5, cont_rect.y + 5))
+
+    output.setText(slider.getValue())
+    speed = slider.getValue()
+    pygame_widgets.update(event)
 
 
     input_rect.w = max(140, text_surface.get_width() + 10)
