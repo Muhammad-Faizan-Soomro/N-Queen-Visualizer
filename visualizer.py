@@ -15,23 +15,27 @@ message = ''
 input_msg = 'Enter Number of Queens:'
 cont_msg = ''
 speed = None
+pause = False
+heading_msg = 'N-Queen Visualizer'
 
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption('N-Queen Visualizer')
 
 
-slider = Slider(WIN, 100, 220, 300, 40, min=0, max=100, step=1)
-output = TextBox(WIN, 450, 215, 70, 50, fontSize=30)
+slider = Slider(WIN, 100, 270, 300, 40, min=0, max=100, step=1)
+output = TextBox(WIN, 450, 265, 70, 50, fontSize=30)
 
 output.disable()
 
 clock = pygame.time.Clock()
 base_font = pygame.font.Font(None,32)
+heading_font = pygame.font.Font(None,48)
 
-display_rect = pygame.Rect(100,100,140,32)
-input_rect = pygame.Rect(140,150,140,32)
-error_rect = pygame.Rect(100,300,140,32)
-cont_rect = pygame.Rect(100,300,140,32)
+heading_rect = pygame.Rect(150,30,200,32)
+display_rect = pygame.Rect(100,150,140,32)
+input_rect = pygame.Rect(140,200,140,32)
+error_rect = pygame.Rect(100,350,140,32)
+cont_rect = pygame.Rect(100,350,140,32)
 
 color_active = pygame.Color('lightskyblue3')
 color_passive = pygame.Color('gray15')
@@ -119,7 +123,6 @@ def algorithm(grid):
     else:
         print("Solution Found")
         return True
-
 
 def isSafe(draw, grid, row, col):
     temp = grid[row][col].color
@@ -283,7 +286,6 @@ def main(win, width):
                 started = False
 
     pygame.quit()
-
     
 while True:
     for event in pygame.event.get():
@@ -336,7 +338,7 @@ while True:
                     if ROW == '':
                         cont_msg = ''
 
-    WIN.fill((0,0,0))
+    WIN.fill((255,255,255))
 
 
     if active:
@@ -347,13 +349,14 @@ while True:
     # pygame.draw.rect(WIN,color,error_rect,2)
 
 
-    disp_surface = base_font.render(input_msg,True,(255,255,255))
-    text_surface = base_font.render(ROW,True,(255,255,255))
-    msg_surface = base_font.render(message,True,(255,255,255))
+    disp_surface = base_font.render(input_msg,True,(0,0,0))
+    text_surface = base_font.render(ROW,True,(0,0,0))
+    msg_surface = base_font.render(message,True,(255,0,0))
     cont_surface = base_font.render(cont_msg,True,(0,255,0))
+    heading_surface = heading_font.render(heading_msg,True,(0,0,0))
 
 
-
+    WIN.blit(heading_surface,(heading_rect.x + 5, heading_rect.y + 5))
     WIN.blit(disp_surface,(display_rect.x + 5, display_rect.y + 5))
     WIN.blit(text_surface,(input_rect.x + 5, input_rect.y + 5))
     WIN.blit(msg_surface,(error_rect.x + 5, error_rect.y + 5))
