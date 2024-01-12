@@ -6,7 +6,7 @@ from pygame_widgets.textbox import TextBox
 
 pygame.init()
 
-WIDTH = 600
+WIDTH = 700
 # Press left click to start execution
 
 # Get user input for the number of queens
@@ -15,8 +15,8 @@ message = ''
 input_msg = 'Enter Number of Queens:'
 cont_msg = ''
 speed = None
-pause = False
 heading_msg = 'N-Queen Visualizer'
+solved = False
 
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption('N-Queen Visualizer')
@@ -26,6 +26,33 @@ slider = Slider(WIN, 100, 270, 300, 40, min=0, max=100, step=1)
 output = TextBox(WIN, 450, 265, 70, 50, fontSize=30)
 
 output.disable()
+# white color 
+color = (255,255,255) 
+  
+# light shade of the button 
+color_light = (170,170,170) 
+  
+# dark shade of the button 
+color_dark = (100,100,100) 
+  
+# stores the width of the 
+# screen into a variable 
+width = WIN.get_width() 
+  
+# stores the height of the 
+# screen into a variable 
+height = WIN.get_height() 
+  
+# defining a font 
+smallfont = pygame.font.SysFont('Corbel',35) 
+  
+# rendering a text written in 
+# this font 
+text = smallfont.render('Quit' , True , color) 
+
+text2 = smallfont.render('Retry',True,color)
+
+text3 = smallfont.render('Start',True,color)
 
 clock = pygame.time.Clock()
 base_font = pygame.font.Font(None,32)
@@ -34,7 +61,7 @@ heading_font = pygame.font.Font(None,48)
 heading_rect = pygame.Rect(150,30,200,32)
 display_rect = pygame.Rect(100,150,140,32)
 input_rect = pygame.Rect(140,200,140,32)
-error_rect = pygame.Rect(100,350,140,32)
+error_rect = pygame.Rect(100,450,140,32)
 cont_rect = pygame.Rect(100,350,140,32)
 
 color_active = pygame.Color('lightskyblue3')
@@ -116,12 +143,15 @@ class Spot:
 
 
 def algorithm(grid):
-    sol = solveNQUtil(lambda: draw(WIN, grid, int(ROW), WIDTH), grid, 0)
+    global solved
+    sol = solveNQUtil(lambda: draw(WIN, grid, int(ROW), WIDTH-50), grid, 0)
     if not sol:
         print("No Solution")
+        solved = False
         return False
     else:
         print("Solution Found")
+        solved = True
         return True
 
 def isSafe(draw, grid, row, col):
@@ -255,121 +285,224 @@ def draw_grid(win, rows, width):
         for j in range(rows):
             pygame.draw.line(win, GREY, (j * gap, 0), (j * gap, width))
 
-
+# yeh side waali jagah hai black
 def draw(win, grid, rows, width):
-    win.fill(WHITE)
+    global solved
+    win.fill(BLACK)
     for row in grid:
         for spot in row:
             spot.draw(win)
     draw_grid(win, rows, width)
+
+    # while True:
+    #     for event in pygame.event.get():
+                
+    #         if event.type == pygame.MOUSEBUTTONDOWN:
+
+    #             if 100 <= mouse[0] <= 100+140 and 650 <= mouse[1] <= 650+40: 
+    #                 pygame.quit() 
+    #                 sys.exit()
+                
+    #         mouse = pygame.mouse.get_pos() 
+
+    #         if 100 <= mouse[0] <= 100+140 and 650 <= mouse[1] <= 650+40: 
+    #             pygame.draw.rect(WIN,color_light,[100,650,140,40])
+    #         else: 
+    #             pygame.draw.rect(WIN,color_dark,[100,650,140,40])
+
+    #         win.blit(text , (150,650))
+
     pygame.display.flip()
     pygame.time.wait(speed)
 
+    if solved == True:
+        print("reached")
 
+
+# yeh grid screen haii
 def main(win, width):
 
     grid = make_grid(int(ROW), width)
     run = True
     started = False
 
-    while run:
-        draw(win, grid, int(ROW), width)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-            if started:
-                continue
-            if pygame.mouse.get_pressed()[0]:
-                started = True
-                algorithm(grid)
-            if pygame.mouse.get_pressed()[2]:
-                started = False
+    draw(win, grid, int(ROW), width)
 
-    pygame.quit()
+    global solved
+
+    while True:
+
+        while run:
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if 100 <= mouse[0] <= 100+140 and 655 <= mouse[1] <= 655+40: 
+                        pygame.quit() 
+                        sys.exit()
+
+                    if 300 <= mouse[0] <= 300+140 and 655 <= mouse[1] <= 655+40: 
+                        intro()
+
+                    if solved == False:
+
+                        if 500 <= mouse[0] <= 500+140 and 655 <= mouse[1] <= 655+40: 
+                            started = True
+                            algorithm(grid)
+                        
+                if started:
+                    continue
+                # if pygame.mouse.get_pressed()[0]:
+                    
+                #     started = True
+                #     algorithm(grid)
+                # if pygame.mouse.get_pressed()[2]:
+                #     started = False
+
+
+            
+                
+            mouse = pygame.mouse.get_pos() 
+
+            if 100 <= mouse[0] <= 100+140 and 655 <= mouse[1] <= 655+40: 
+                pygame.draw.rect(win,color_light,[100,655,140,40])
+            else: 
+                pygame.draw.rect(win,color_dark,[100,655,140,40])
+
+            if 300 <= mouse[0] <= 300+140 and 655 <= mouse[1] <= 655+40: 
+                pygame.draw.rect(win,color_light,[300,655,140,40])
+            else: 
+                pygame.draw.rect(win,color_dark,[300,655,140,40])
+
+            if solved == False:
+
+                if 500 <= mouse[0] <= 500+140 and 655 <= mouse[1] <= 655+40: 
+                    pygame.draw.rect(win,color_light,[500,655,140,40])
+                else: 
+                    pygame.draw.rect(win,color_dark,[500,655,140,40])
+
+                win.blit(text3,(530,660))
+
+            win.blit(text , (130,660))
+            win.blit(text2, (330,660))
+
+
+            pygame.display.flip()
+
+        pygame.quit()
+        sys.exit()
     
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+# yahaaan se intro screen hai
+def intro():
+    global ROW
+    global active
+    global cont_msg
+    global input_msg
+    global heading_msg
+    global message
+    global speed
+    while True:
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if input_rect.collidepoint(event.pos):
-                active = True
-            else:
-                active = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if input_rect.collidepoint(event.pos):
+                    active = True
+                else:
+                    active = False
 
-        if event.type == pygame.KEYDOWN:
-            if active == True:
-                if event.key == pygame.K_BACKSPACE:
-                    message = ''
-                    ROW = ROW[:-1]
-                    if ROW == '':
-                        cont_msg = ''
-                    elif int(ROW) <= 100 and int(ROW) >= 4:
-                        cont_msg = 'Press Enter To Continue'
-                    elif int(ROW) > 100:
-                        message = 'For Better Experience Make Input <= 100'
-                        cont_msg = ''
-                    elif int(ROW) < 4:
-                        message = 'Input Should be >= 4'
-                        cont_msg = ''
-                elif event.key == pygame.K_RETURN:
+                if 100 <= mouse[0] <= 100+140 and 400 <= mouse[1] <= 400+40: 
                     if ROW == '':
                         message = 'Input Can Not Be Empty'
-                    elif cont_msg == 'Press Enter To Continue':
-                        main(WIN, WIDTH)
+                    elif cont_msg == 'Click Start To Continue':
+                        main(WIN, WIDTH-50)
                         pygame.quit()
                         sys.exit()
-                elif event.key == pygame.K_0 or event.key == pygame.K_1 or event.key == pygame.K_2 or event.key == pygame.K_3 or event.key == pygame.K_4 or event.key == pygame.K_5 or event.key == pygame.K_6 or event.key == pygame.K_7 or event.key == pygame.K_8 or event.key == pygame.K_9:
-                    message = ''
-                    ROW += event.unicode
-                    if int(ROW) > 100:
-                        message = 'For Better Experience Make Input <= 100'
-                        cont_msg = ''
-                    elif int(ROW) < 4:
-                        message = 'Input Should be >= 4'
-                        cont_msg = ''
-                    else:
+                    
+            if event.type == pygame.KEYDOWN:
+                if active == True:
+                    if event.key == pygame.K_BACKSPACE:
                         message = ''
-                        cont_msg = 'Press Enter To Continue'
-                else:
-                    message = 'Please Enter Any Valid Number'
-                    if ROW == '':
-                        cont_msg = ''
+                        ROW = ROW[:-1]
+                        if ROW == '':
+                            cont_msg = ''
+                        elif int(ROW) <= 100 and int(ROW) >= 4:
+                            cont_msg = 'Click Start To Continue'
+                        elif int(ROW) > 100:
+                            message = 'For Better Experience Make Input <= 100'
+                            cont_msg = ''
+                        elif int(ROW) < 4:
+                            message = 'Input Should be >= 4'
+                            cont_msg = ''
+                    # elif event.key == pygame.K_RETURN:
+                    #     if ROW == '':
+                    #         message = 'Input Can Not Be Empty'
+                    #     elif cont_msg == 'Click Start To Continue':
+                    #         main(WIN, WIDTH-50)
+                    #         pygame.quit()
+                    #         sys.exit()
+                    elif event.key == pygame.K_0 or event.key == pygame.K_1 or event.key == pygame.K_2 or event.key == pygame.K_3 or event.key == pygame.K_4 or event.key == pygame.K_5 or event.key == pygame.K_6 or event.key == pygame.K_7 or event.key == pygame.K_8 or event.key == pygame.K_9:
+                        message = ''
+                        ROW += event.unicode
+                        if int(ROW) > 100:
+                            message = 'For Better Experience Make Input <= 100'
+                            cont_msg = ''
+                        elif int(ROW) < 4:
+                            message = 'Input Should be >= 4'
+                            cont_msg = ''
+                        else:
+                            message = ''
+                            cont_msg = 'Click Start To Continue'
+                    else:
+                        message = 'Please Enter Any Valid Number'
+                        if ROW == '':
+                            cont_msg = ''
 
-    WIN.fill((255,255,255))
+        WIN.fill((255,255,255))
+
+        if active:
+            color = color_active
+        else: 
+            color = color_passive
+        pygame.draw.rect(WIN,color,input_rect,2)
+
+        mouse = pygame.mouse.get_pos() 
+
+        if 100 <= mouse[0] <= 100+140 and 400 <= mouse[1] <= 400+40: 
+            pygame.draw.rect(WIN,color_light,[100,400,140,40])
+        else: 
+            pygame.draw.rect(WIN,color_dark,[100,400,140,40])
+
+        WIN.blit(text3 , (130,405))
 
 
-    if active:
-        color = color_active
-    else: 
-        color = color_passive
-    pygame.draw.rect(WIN,color,input_rect,2)
-    # pygame.draw.rect(WIN,color,error_rect,2)
+        disp_surface = base_font.render(input_msg,True,(0,0,0))
+        text_surface = base_font.render(ROW,True,(0,0,0))
+        msg_surface = base_font.render(message,True,(255,0,0))
+        cont_surface = base_font.render(cont_msg,True,(0,255,0))
+        heading_surface = heading_font.render(heading_msg,True,(0,0,0))
 
 
-    disp_surface = base_font.render(input_msg,True,(0,0,0))
-    text_surface = base_font.render(ROW,True,(0,0,0))
-    msg_surface = base_font.render(message,True,(255,0,0))
-    cont_surface = base_font.render(cont_msg,True,(0,255,0))
-    heading_surface = heading_font.render(heading_msg,True,(0,0,0))
+        WIN.blit(heading_surface,(heading_rect.x + 5, heading_rect.y + 5))
+        WIN.blit(disp_surface,(display_rect.x + 5, display_rect.y + 5))
+        WIN.blit(text_surface,(input_rect.x + 5, input_rect.y + 5))
+        WIN.blit(msg_surface,(error_rect.x + 5, error_rect.y + 5))
+        WIN.blit(cont_surface,(cont_rect.x + 5, cont_rect.y + 5))
+
+        output.setText(slider.getValue())
+        speed = slider.getValue()
+        pygame_widgets.update(events)
 
 
-    WIN.blit(heading_surface,(heading_rect.x + 5, heading_rect.y + 5))
-    WIN.blit(disp_surface,(display_rect.x + 5, display_rect.y + 5))
-    WIN.blit(text_surface,(input_rect.x + 5, input_rect.y + 5))
-    WIN.blit(msg_surface,(error_rect.x + 5, error_rect.y + 5))
-    WIN.blit(cont_surface,(cont_rect.x + 5, cont_rect.y + 5))
+        input_rect.w = max(140, text_surface.get_width() + 10)
 
-    output.setText(slider.getValue())
-    speed = slider.getValue()
-    pygame_widgets.update(event)
+        pygame.display.flip()
+        clock.tick(60)
 
 
-    input_rect.w = max(140, text_surface.get_width() + 10)
-
-    pygame.display.flip()
-    clock.tick(60)
-
-
+intro()
