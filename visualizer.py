@@ -403,6 +403,7 @@ def intro():
     global heading_msg
     global message
     global speed
+    global solved
     while True:
         events = pygame.event.get()
         for event in events:
@@ -420,6 +421,7 @@ def intro():
                     if ROW == '':
                         message = 'Input Can Not Be Empty'
                     elif cont_msg == 'Click Start To Continue':
+                        solved = False 
                         main(WIN, WIDTH-50)
                         pygame.quit()
                         sys.exit()
