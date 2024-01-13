@@ -131,7 +131,6 @@ class Spot:
 
     def draw(self, win):
         if self.color == BLACK:  # Check if the spot is a barrier
-            # Load chess queen image (replace 'queen_image.png' with your image file)
             queen_img = pygame.image.load('nqeen.jpg')
             queen_img = pygame.transform.scale(queen_img, (self.width, self.width))
             win.blit(queen_img, (self.x, self.y))
@@ -169,7 +168,6 @@ def isSafe(draw, grid, row, col):
                 if j == i:
                     continue
                 grid[row][j].make_reset()
-                # draw()
             grid[row][col].make_reset()
             return False
         if not grid[row][i].is_open():
@@ -180,7 +178,6 @@ def isSafe(draw, grid, row, col):
         for j in range(len(grid[0])):
             if grid[i][j].is_checking():
                 grid[i][j].make_reset()
-                # draw()
 
     # Check upper diagonal on left side
     for i, j in zip(range(row, -1, -1),
@@ -195,7 +192,6 @@ def isSafe(draw, grid, row, col):
                 if i2 == i and j2 == j:
                     continue
                 grid[i2][j2].make_reset()
-                # draw()
             grid[row][col].make_reset()
             return False
         if not grid[i][j].is_open():
@@ -206,7 +202,6 @@ def isSafe(draw, grid, row, col):
         for j in range(len(grid[0])):
             if grid[i][j].is_checking():
                 grid[i][j].make_reset()
-                # draw()
 
     # Check lower diagonal on left side
     for i, j in zip(range(row, int(ROW), 1),
@@ -232,7 +227,6 @@ def isSafe(draw, grid, row, col):
         for j in range(len(grid[0])):
             if grid[i][j].is_checking():
                 grid[i][j].make_reset()
-                # draw()
     grid[row][col].color = temp
     return True
 
@@ -285,7 +279,6 @@ def draw_grid(win, rows, width):
         for j in range(rows):
             pygame.draw.line(win, GREY, (j * gap, 0), (j * gap, width))
 
-# yeh side waali jagah hai black
 def draw(win, grid, rows, width):
     global solved
     win.fill(BLACK)
@@ -294,32 +287,10 @@ def draw(win, grid, rows, width):
             spot.draw(win)
     draw_grid(win, rows, width)
 
-    # while True:
-    #     for event in pygame.event.get():
-                
-    #         if event.type == pygame.MOUSEBUTTONDOWN:
-
-    #             if 100 <= mouse[0] <= 100+140 and 650 <= mouse[1] <= 650+40: 
-    #                 pygame.quit() 
-    #                 sys.exit()
-                
-    #         mouse = pygame.mouse.get_pos() 
-
-    #         if 100 <= mouse[0] <= 100+140 and 650 <= mouse[1] <= 650+40: 
-    #             pygame.draw.rect(WIN,color_light,[100,650,140,40])
-    #         else: 
-    #             pygame.draw.rect(WIN,color_dark,[100,650,140,40])
-
-    #         win.blit(text , (150,650))
-
     pygame.display.flip()
     pygame.time.wait(speed)
 
-    if solved == True:
-        print("reached")
 
-
-# yeh grid screen haii
 def main(win, width):
 
     grid = make_grid(int(ROW), width)
@@ -353,16 +324,7 @@ def main(win, width):
                             algorithm(grid)
                         
                 if started:
-                    continue
-                # if pygame.mouse.get_pressed()[0]:
-                    
-                #     started = True
-                #     algorithm(grid)
-                # if pygame.mouse.get_pressed()[2]:
-                #     started = False
-
-
-            
+                    continue    
                 
             mouse = pygame.mouse.get_pos() 
 
@@ -394,7 +356,6 @@ def main(win, width):
         pygame.quit()
         sys.exit()
     
-# yahaaan se intro screen hai
 def intro():
     global ROW
     global active
@@ -441,13 +402,6 @@ def intro():
                         elif int(ROW) < 4:
                             message = 'Input Should be >= 4'
                             cont_msg = ''
-                    # elif event.key == pygame.K_RETURN:
-                    #     if ROW == '':
-                    #         message = 'Input Can Not Be Empty'
-                    #     elif cont_msg == 'Click Start To Continue':
-                    #         main(WIN, WIDTH-50)
-                    #         pygame.quit()
-                    #         sys.exit()
                     elif event.key == pygame.K_0 or event.key == pygame.K_1 or event.key == pygame.K_2 or event.key == pygame.K_3 or event.key == pygame.K_4 or event.key == pygame.K_5 or event.key == pygame.K_6 or event.key == pygame.K_7 or event.key == pygame.K_8 or event.key == pygame.K_9:
                         message = ''
                         ROW += event.unicode
